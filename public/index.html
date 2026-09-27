@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>AI Interview Coach · Cloudflare Workers AI</title>
+		<meta name="description" content="Mock technical-interview coach built on Workers AI, Durable Objects and Workflows." />
+		<link rel="stylesheet" href="/styles.css" />
+		<script type="module" src="/app.js"></script>
+	</head>
+	<body>
+		<div class="layout">
+			<header class="topbar">
+				<div class="brand">
+					<span class="brand-mark" aria-hidden="true"></span>
+					<div>
+						<h1>AI Interview Coach</h1>
+						<p class="tagline">Llama 3.3 on Workers AI · memory in a Durable Object · notes by a Workflow</p>
+					</div>
+				</div>
+				<div class="topbar-actions">
+					<span class="turns" id="turns" aria-live="polite">0 turns</span>
+					<button type="button" class="ghost" id="new-session">New session</button>
+				</div>
+			</header>
+
+			<main class="chat" aria-label="Conversation">
+				<ol class="messages" id="messages" aria-live="polite"></ol>
+
+				<div class="suggestions" id="suggestions">
+					<button type="button" class="chip">Give me a backend system design question</button>
+					<button type="button" class="chip">Ask me a Java concurrency question</button>
+					<button type="button" class="chip">Run a behavioural round for an SDE-1 role</button>
+				</div>
+
+				<form class="composer" id="composer">
+					<label class="visually-hidden" for="input">Your answer</label>
+					<textarea
+						id="input"
+						rows="2"
+						maxlength="4000"
+						placeholder="Answer the question, or tell the coach what role you are preparing for…"
+						required
+					></textarea>
+					<button type="submit" id="send">Send</button>
+				</form>
+				<p class="hint">Enter to send · Shift+Enter for a new line</p>
+				<p class="error" id="error" role="alert" hidden></p>
+			</main>
+
+			<aside class="notes" aria-labelledby="notes-title">
+				<h2 id="notes-title">Coach notes</h2>
+				<p class="notes-sub">Long-term memory. A Workflow rewrites these every few turns.</p>
+				<p class="notes-status" id="notes-status" hidden>Updating notes…</p>
+				<pre class="notes-body" id="notes">No notes yet. They appear after a few turns.</pre>
+			</aside>
+		</div>
+	</body>
+</html>

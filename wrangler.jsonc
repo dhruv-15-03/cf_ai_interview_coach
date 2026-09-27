@@ -1,0 +1,41 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "cf-ai-interview-coach",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-09-25",
+	"observability": {
+		"enabled": true
+	},
+	// Static chat UI (the Workers static-assets equivalent of Pages).
+	"assets": {
+		"directory": "./public",
+		"binding": "ASSETS"
+	},
+	// Workers AI: Llama 3.3 70B.
+	"ai": {
+		"binding": "AI"
+	},
+	// One SQLite-backed Durable Object per chat session holds memory/state.
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "CHAT_SESSION",
+				"class_name": "ChatSession"
+			}
+		]
+	},
+	"migrations": [
+		{
+			"tag": "v1",
+			"new_sqlite_classes": ["ChatSession"]
+		}
+	],
+	// Durable, retried background job that condenses the conversation into long-term notes.
+	"workflows": [
+		{
+			"name": "cf-ai-interview-coach-summarizer",
+			"binding": "SUMMARIZER",
+			"class_name": "SummarizeWorkflow"
+		}
+	]
+}
