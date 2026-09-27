@@ -1,11 +1,12 @@
 # PROMPTS.md
 
 The assignment says: "AI-assisted coding is encouraged, but you have to submit prompt history." This file is that
-history. It has three parts:
+history. It has four parts:
 
 1. the prompt that produced the first version of this code;
 2. the prompts the app itself sends to Llama 3.3 at runtime;
-3. prompts added during my own review and changes.
+3. prompts added during my own review and changes;
+4. the coordinator prompts that deployed and published the app.
 
 ## 1. Build prompt (AI coding assistant)
 
@@ -113,3 +114,85 @@ order they were used.
 | Date | Tool / model | Prompt (verbatim) | What changed |
 | ---- | ------------ | ----------------- | ------------ |
 |      |              |                   |              |
+
+## 4. Deployment and publishing prompts (coordinator)
+
+After the build, the same AI coding agent (GitHub Copilot app, agent mode, Claude Opus 5.5) deployed the app to
+Dhruv's Cloudflare account and published this repository, on 27 September 2026. Dhruv logged in to Cloudflare himself
+through `npx wrangler login`. The agent received the instructions below, quoted verbatim in the order it received them.
+
+### R-27SEP-40
+
+> R-27SEP-40 (coordinator, 19:20 IST). PRINCIPAL-DIRECTED. Dhruv explicitly asks us to DEPLOY and PUBLISH E:\cf_ai_interview_coach. This lifts the R-27SEP-19 prohibitions for exactly these steps, in order. Stop at the first failure and report.
+>
+> 1. In E:\cf_ai_interview_coach, run `npm install`, `npm test` and `npm run typecheck`. All must pass.
+>
+> 2. Run `npx wrangler login`. It opens Dhruv's browser for Cloudflare OAuth.
+>    - Dhruv himself must log in, or create a free account, and click Allow. Never type credentials, create accounts, or automate the browser.
+>    - Wait up to 15 minutes. If it's not authorized by then, STOP and report "waiting for Dhruv's Cloudflare login".
+>
+> 3. Run `npx wrangler deploy`.
+>    - Then smoke-test the deployed URL with curl: GET / returns 200, and POST /api/chat with a fresh sessionId returns 200 JSON with a reply.
+>    - Keep AI usage minimal: at most 3 test messages.
+>    - If the plan limits block Workflows or Durable Objects, STOP and report the exact error. Do not upgrade the plan, add billing, or change the architecture.
+>
+> 4. Update README.md: replace the "Live demo" placeholder with the deployed URL. Change nothing else.
+>
+> 5. GitHub, as dhruv-15-03 ONLY. Run the identity gate in the same invocation as every gh/git network call:
+>    - Clear GH_TOKEN, GITHUB_TOKEN and GIT_CONFIG_PARAMETERS.
+>    - Run `gh auth switch --user dhruv-15-03`.
+>    - Verify that `gh api user --jq .login` prints dhruv-15-03; otherwise STOP.
+>    - Run `git init -b main`, set user.name "Dhruv Rastogi" and user.email dhruvrastogi2004@gmail.com.
+>    - Run `git status`. node_modules, .wrangler, .dev.vars and any secrets must NOT appear.
+>    - Make one commit: "AI interview coach on Cloudflare: Workers AI, Durable Objects, Workflows".
+>    - Run `gh repo create cf_ai_interview_coach --public --source . --remote origin --push`.
+>    - Verify server-side that the repo owner and the commit author are dhruv-15-03. Never v-dhruv.
+>
+> 6. Do NOT apply to Cloudflare or touch any application form. Dhruv submits the repo URL himself.
+>
+> REPORT ONCE with:
+> - test results;
+> - the deployed URL and smoke-test output;
+> - the repo URL, commit SHA, and identity-gate evidence;
+> - any costs or limits observed.
+
+### Coordinator note (19:19 IST)
+
+> Coordinator note for R-27SEP-40: Dhruv reports at 19:19 IST that his Cloudflare step is DONE. Confirm with `npx wrangler whoami` and continue with steps 3–6. If whoami does not show his account, report that; do not start a new login loop.
+
+### R-27SEP-41
+
+The first `npx wrangler deploy` stopped because the account had no workers.dev subdomain yet, and the agent reported
+that. This ruling followed:
+
+> R-27SEP-41 (coordinator, 19:23 IST). Ruling (b). Register the workers.dev subdomain **dhruv-15-03**, matching his GitHub handle. If that name is unavailable, use **dhruvrastogi**. If both are taken, STOP and report.
+>
+> Register it by answering wrangler's own prompt, or through the equivalent official Cloudflare account API call using the existing OAuth session. No other account or plan changes.
+>
+> Then resume R-27SEP-40 steps 3 to 6 exactly as written:
+> - deploy;
+> - run the smoke test (at most 3 AI messages);
+> - set the README Live demo URL;
+> - publish the GitHub repo as dhruv-15-03, with the identity gate in the same invocation as each push;
+> - apply to nothing.
+>
+> Report ONCE.
+
+The agent registered `dhruv-15-03` through the Cloudflare API (`PUT /accounts/{account_id}/workers/subdomain`),
+deployed, sent one test chat message, set the README "Live demo" line and published the repository.
+
+### R-27SEP-42
+
+This section itself was added under the following instruction:
+
+> R-27SEP-42 (coordinator). R-27SEP-40/41 accepted. I verified the repo owner and commit author (dhruv-15-03), and the site returns 200 via DoH. One honesty follow-up, because the assignment requires the prompt history:
+>
+> - In PROMPTS.md, ADD a new section after section 3, titled "4. Deployment and publishing prompts (coordinator)".
+> - Paste R-27SEP-40, R-27SEP-41 and the 19:19 coordinator note verbatim.
+> - Leave section 3 empty; it is for Dhruv's own prompts.
+> - Run npm test.
+> - Make ONE commit, "Add deployment prompt history to PROMPTS.md", and push to origin/main.
+> - Run the full identity gate in the same invocation as the push, then verify author and committer are dhruv-15-03 server-side.
+> - No force-push and no other file changes.
+>
+> Report the new commit SHA in one line, then go IDLE.
